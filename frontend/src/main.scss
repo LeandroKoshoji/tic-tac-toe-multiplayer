@@ -6,6 +6,7 @@
     --color-accent-one: #bb86fc;
     --color-accent-two: #bb86fc;
     --color-neutral: #dddddd;
+    --default-padding: 16px;
     --radius: 8px;
 }
 
@@ -14,6 +15,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+#app {
   min-height: 100vh;
   background-color: var(--color-backgrond);
   color: var(--color-neutral)
