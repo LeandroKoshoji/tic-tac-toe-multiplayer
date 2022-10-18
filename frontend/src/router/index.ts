@@ -8,9 +8,9 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
-    path: '/board/:mode/:id',
-    name: 'board',
-    component: () => import('../views/BoardView/BoardView.vue')
+    path: '/local-game',
+    name: 'localGame',
+    component: () => import('../views/BoardView/LocalBoardView.vue/LocalBoardView.vue')
   }
 ]
 
