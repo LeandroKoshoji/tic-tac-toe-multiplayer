@@ -1,0 +1,98 @@
+.the-board-view {
+    min-height: 100vh;
+    display: flex;
+    .result {
+        margin: auto;
+        background-color: var(--color-semi-neutral);
+        border-radius: var(--radius);
+        padding: var(--full-padding);
+
+        .result-text {
+            font-weight: 900;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .result-symbol {
+            font-weight: 900;
+            font-size: 4rem;
+            text-align: center;
+            padding-bottom: var(--full-padding);
+
+            animation: rotate linear infinite 2s;
+
+            &.player-x {
+                color: var(--color-accent-one);
+            }
+            &.player-o {
+                color: var(--color-accent-two);
+            }
+
+            @keyframes rotate {
+                from {
+                    transform: rotate3d(1, 1, 1, 0deg);
+                }
+                to {
+                    transform: rotate3d(1, 1, 1, 360deg);
+                }
+            }
+        }
+
+        .end-button {
+            margin-bottom: 16px;
+        }
+    } 
+    .game {
+        margin: auto;
+
+        .scores {
+            display:  flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--half-padding);
+            padding-bottom: var(--full-padding);;
+            
+            .score {
+                border-radius: var(--radius);
+                width: 100%;
+                aspect-ratio: 2;
+                background-color: var(--color-semi-neutral);
+                padding: var(--half-padding);
+
+                &.player-x {
+                    background-color: var(--color-accent-one);
+                    color: var(--color-backgrond);
+                }
+                &.ties {
+                    background-color: var(--color-neutral);
+                    color: var(--color-backgrond);
+                }
+                &.player-o {
+                    background-color: var(--color-accent-two);
+                    color: var(--color-backgrond);
+                }
+
+                .score-title,
+                .score-number {
+                    text-align: center;
+                }
+                .score-title {
+                    font-size: 0.9rem;
+                }
+                .score-number {
+                    font-weight: 900;
+                    font-size: 1.25rem;
+                }
+            }
+        }
+        .end-buttons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-top: var(--full-padding);;
+
+            .rematch {
+                flex: 90%
+            }
+        }
+    }
+}
