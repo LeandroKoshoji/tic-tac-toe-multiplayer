@@ -8,7 +8,7 @@
           <div class="menu-hash-two">#</div>
         </div>
         <DButton color="accent-two" fontW="bold" @eventClick="startLocalGame">New Game (Local)</DButton>
-        <DButton color="accent-two" fontW="bold">New Game (Online)</DButton>
+        <DButton color="accent-two" fontW="bold" @eventClick="startOnlineGame">New Game (Online)</DButton>
       </div>
     </div>
   </div>
@@ -16,11 +16,17 @@
 
 <script setup lang="ts" >
 import DButton from '@/components/DButton/DButton.vue'
-import router from '@/router';
+import { useRouter } from 'vue-router'
+import { generateID } from '@/utils/index'
 
+const router = useRouter()
 
 const startLocalGame = () => {
   router.push({ name: 'localGame'})
+}
+const startOnlineGame = () => {
+  const id = generateID()
+  router.push({ name: 'onlineGame', params: { id }})
 }
 </script>
 
