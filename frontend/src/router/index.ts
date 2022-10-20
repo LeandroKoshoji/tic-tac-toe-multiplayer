@@ -11,7 +11,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/local-game',
     name: 'localGame',
     component: () => import('../views/BoardView/LocalBoardView.vue/LocalBoardView.vue')
-  }
+  },
+  {
+    path: '/online-game/:id',
+    name: 'onlineGame',
+    component: () => import('../views/BoardView/OnlineBoardView/OnlineBoardView.vue')
+  },
 ]
 
 const router = createRouter({
