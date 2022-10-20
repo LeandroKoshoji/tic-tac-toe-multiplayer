@@ -2,6 +2,18 @@
     <div class="container">
     <div class="the-board-view">
         <div class="game">
+            <div class="turn">
+                <div class="turn-text">Turn:</div>
+                <div class="turn-symbol" :class="turnColor"> {{turn}}</div>
+            </div>
+            <TheBoard
+                :board="board"
+                :turn="turn"
+                @makeMove="makePlayerMove"
+                :winner="winner"
+                :winnerCombination="winnerCombination"
+                :disabled="false"
+            />
             <div class="scores">
                 <div class="score player-x">
                     <div class="score-title">Player X</div>
@@ -16,14 +28,6 @@
                     <div class="score-number">{{players.O.score}}</div>
                 </div>
             </div>
-            <TheBoard
-                :board="board"
-                :turn="turn"
-                @makeMove="makePlayerMove"
-                :winner="winner"
-                :winnerCombination="winnerCombination"
-                :disabled="false"
-            />
             <div v-if="gameOver" class="end-buttons">
                 <div class="rematch">
                     <DButton :color="rematchButtonColor" @eventClick="restartGame">Rematch</DButton>
@@ -42,7 +46,7 @@
 import TheBoard from '@/components/TheBoard/TheBoard.vue'
 import DButton from '@/components/DButton/DButton.vue'
 import useGame from '@/composables/useGame'
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router'
 
 interface IPlayerMove {
@@ -75,6 +79,9 @@ const rematchButtonColor = computed((): string => {
     if (winner.value === 'X') return 'accent-two'
     if (winner.value === 'O') return 'accent-one'
     return ''
+})
+const turnColor = computed((): string => {
+    return turn.value === 'X' ? 'turn-X' : 'turn-O'
 })
 
 const makePlayerMove = (playerMove: IPlayerMove) => {
