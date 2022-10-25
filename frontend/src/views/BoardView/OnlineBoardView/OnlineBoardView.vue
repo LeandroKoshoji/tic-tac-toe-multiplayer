@@ -59,6 +59,7 @@ import DotLoading from '@/components/DotLoading/DotLoading.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { io } from "socket.io-client";
 import { ref, computed } from 'vue'
+import { SocketEmitEvents, SocketOnEvents } from '@/utils/index'
 
 interface IPlayer {
     symbol: string
@@ -91,7 +92,7 @@ interface IPlayerMove {
 const route = useRoute()
 const router = useRouter()
 const roomId = route.params.id
-const socket = io('http://localhost:3000')
+const socket = io('https://tic-tac-toe-multplayer-server.herokuapp.com/')
 
 const sessioFull = ref<boolean>(false)
 const gameStart = ref<boolean>(false)
@@ -121,26 +122,25 @@ const rematchButtonColor = computed((): string => {
 const turnColor = computed((): string => {
     return turn.value === 'X' ? 'turn-X' : 'turn-O'
 })
-const isMyTurn = computed(() => {
+const isMyTurn = computed((): boolean => {
     return turn.value === player.value.symbol
 })
-const url = computed(() => {
+const url = computed((): string => {
     return window.origin + route.fullPath
 })
 
 const makeMove = (playerMove: IPlayerMove) => {
-    socket.emit('player_move', {...playerMove, roomId})
+    socket.emit(SocketEmitEvents.PLAYER_MOVE, {...playerMove, roomId})
 }
-
 const goToMenu = () => {
     socket.disconnect()
     router.push({name: 'home'})
 }
 const rematch = () => {
-    socket.emit('rematch', roomId)
+    socket.emit(SocketEmitEvents.REMATCH, roomId)
 }
 
-socket.emit('check_room', roomId, (response: IResponse) => {
+socket.emit(SocketEmitEvents.CHECK_ROOM, roomId, (response: IResponse) => {
     if (response.status === 400) {
         sessioFull.value = true
         return
@@ -149,16 +149,15 @@ socket.emit('check_room', roomId, (response: IResponse) => {
         player.value = response.player
     }
 })
-
-socket.on('ready_to_start', () => {
-    socket.emit('start_game', roomId, (startGameResponse: IStartGameResponse) => {
+socket.on(SocketOnEvents.READY_TO_START, () => {
+    socket.emit(SocketEmitEvents.START_GAME, roomId, (startGameResponse: IStartGameResponse) => {
         gameStart.value = startGameResponse.start
         board.value = startGameResponse.board
         turn.value = startGameResponse.turn
         gameScore.value = startGameResponse.gameScore
     })
 })
-socket.on('game_update', (gameUpdate) => {
+socket.on(SocketOnEvents.GAME_UPDATE, (gameUpdate) => {
     board.value = gameUpdate.board
     turn.value = gameUpdate.turn
     winner.value = gameUpdate.winner
@@ -166,11 +165,11 @@ socket.on('game_update', (gameUpdate) => {
     gameScore.value = gameUpdate.scores
     gameOver.value = gameUpdate.gameOver
 })
-socket.on('start_rematch_game', (rematchGame) => {
+socket.on(SocketOnEvents.START_REMATCH_GAME, (rematchGame) => {
     board.value = rematchGame.board
     turn.value = rematchGame.turn
 })
-socket.on('player_disconnected', () => {
+socket.on(SocketOnEvents.PLAYER_DISCONNECTED, () => {
     playerDisconnected.value = true
     const timer = setInterval(() => {
         if (secondsToHome.value === 0) {
