@@ -1,7 +1,11 @@
 <template>
     <div class="container">
         <div class="the-board-view">
-            <div v-if="playerDisconnected" class="player-disconnected">
+            <div v-if="sessioFull" class="session-full">
+                <p class="session-full-text">This game session is already full.</p>
+                <p class="session-full-sub-text">Redirecting you to home in {{secondsToHome}} seconds...</p>
+            </div>
+            <div v-else-if="playerDisconnected" class="player-disconnected">
                 <p class="player-disconnected-text">Your opponent quit the game.</p>
                 <p class="player-disconnected-sub-text">Redirecting you to home in {{secondsToHome}} seconds...</p>
             </div>
@@ -58,7 +62,7 @@ import DButton from '@/components/DButton/DButton.vue'
 import DotLoading from '@/components/DotLoading/DotLoading.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { io } from "socket.io-client";
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { SocketEmitEvents, SocketOnEvents } from '@/utils/index'
 
 interface IPlayer {
@@ -136,6 +140,15 @@ const goToMenu = () => {
     socket.disconnect()
     router.push({name: 'home'})
 }
+const startGoToMenuTimer = () => {
+    const timer = setInterval(() => {
+        if (secondsToHome.value === 0) {
+            clearInterval(timer)
+            goToMenu()
+        }
+        secondsToHome.value --
+    }, 1000)
+}
 const rematch = () => {
     socket.emit(SocketEmitEvents.REMATCH, roomId)
 }
@@ -171,13 +184,11 @@ socket.on(SocketOnEvents.START_REMATCH_GAME, (rematchGame) => {
 })
 socket.on(SocketOnEvents.PLAYER_DISCONNECTED, () => {
     playerDisconnected.value = true
-    const timer = setInterval(() => {
-        if (secondsToHome.value === 0) {
-            clearInterval(timer)
-            goToMenu()
-        }
-        secondsToHome.value --
-    }, 1000)
+    startGoToMenuTimer()
+})
+
+watch(sessioFull, (current) => {
+    if (current) startGoToMenuTimer()
 })
 
 </script>
@@ -187,6 +198,18 @@ socket.on(SocketOnEvents.PLAYER_DISCONNECTED, () => {
     min-height: 100vh;
     display: flex;
 
+    .session-full {
+        margin: auto;
+
+        .session-full-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .session-full-sub-text {
+            text-align: center;
+        }
+    }
     .player-disconnected {
         margin: auto;
 
