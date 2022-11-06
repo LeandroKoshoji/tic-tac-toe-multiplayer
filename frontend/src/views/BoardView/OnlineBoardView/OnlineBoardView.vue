@@ -62,7 +62,7 @@ import DButton from '@/components/DButton/DButton.vue'
 import DotLoading from '@/components/DotLoading/DotLoading.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { io } from "socket.io-client";
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { SocketEmitEvents, SocketOnEvents } from '@/utils/index'
 
 interface IPlayer {
@@ -189,6 +189,10 @@ socket.on(SocketOnEvents.PLAYER_DISCONNECTED, () => {
 
 watch(sessioFull, (current) => {
     if (current) startGoToMenuTimer()
+})
+
+onBeforeUnmount(() => {
+    socket.disconnect()
 })
 
 </script>
