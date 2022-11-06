@@ -106,8 +106,8 @@ io.on('connection', (socket)=> {
         addPlayerMoveInBoard(roomBoard, playerTurn, moveIndex)
         addPlayerMove(player.moves, moveIndex)
         changeTurn(room, playerTurn)
-        checkDraw(room, playerOneMoves, playerTwoMoves)
         const winner = checkWinner(room, playerOneMoves, playerTwoMoves)
+        checkDraw(room, playerOneMoves, playerTwoMoves, winner)
 
         if (winner) {
             io.to(roomId).emit('game_update', {

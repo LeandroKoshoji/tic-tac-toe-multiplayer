@@ -64,10 +64,10 @@ const checkWinner = (room, playerOneMoves, playerTwoMoves) => {
     return false
 }
 
-const checkDraw = (room, playerOneMoves, playerTwoMoves) => {
+const checkDraw = (room, playerOneMoves, playerTwoMoves, winner) => {
     const playerMovesAmount = playerOneMoves.length +  playerTwoMoves.length
     const roomBoard = room.board
-    if (playerMovesAmount === roomBoard.length) {
+    if (playerMovesAmount === roomBoard.length && !winner) {
         room.gameOver = true
         room.ties ++
     }
