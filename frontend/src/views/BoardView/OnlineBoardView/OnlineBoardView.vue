@@ -17,6 +17,7 @@
 
             </div>
             <div v-else class="game">
+                <div class="ping">{{ping}} ms</div>
                 <div class="turn">
                     <div class="turn-text">Turn:</div>
                     <div class="turn-symbol" :class="turnColor"> {{turn}}</div>
@@ -98,6 +99,7 @@ const router = useRouter()
 const roomId = route.params.id
 const socket = io('https://tic-tac-toe-multplayer-server.herokuapp.com/')
 
+const ping = ref<number>()
 const sessioFull = ref<boolean>(false)
 const gameStart = ref<boolean>(false)
 const player = ref<IPlayer>({
@@ -191,6 +193,15 @@ watch(sessioFull, (current) => {
     if (current) startGoToMenuTimer()
 })
 
+setInterval(() => {
+  const start = Date.now();
+
+  socket.emit("ping", () => {
+    const duration = Date.now() - start;
+    ping.value = duration
+  });
+}, 1000);
+
 onBeforeUnmount(() => {
     socket.disconnect()
 })
@@ -257,8 +268,14 @@ onBeforeUnmount(() => {
         }
     }
     .game {
+        // position: relative;
         margin: auto;
-
+        
+        .ping {
+            position: absolute;
+            top: 0;
+            right: 50%;
+        }
         .turn {
             display: flex;
             align-items: center;
