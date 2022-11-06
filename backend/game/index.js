@@ -14,6 +14,9 @@ const winCombinations = [
     [2, 4, 6]
 ]
 
+const checkBoardPosition = (board, moveIndex) => {
+    return Boolean(!board[moveIndex])
+}
 const addPlayerMove = (playerMoves, playerMove) => {
     playerMoves.push(playerMove)
 }
@@ -78,6 +81,7 @@ module.exports = {
     winCombinations,
     addPlayerMove,
     addPlayerMoveInBoard,
+    checkBoardPosition,
     changeTurn,
     checkWinner,
     checkDraw

@@ -4,6 +4,7 @@ const http = require('http')
 const cors = require('cors')
 const {
     defaultBoard,
+    checkBoardPosition,
     addPlayerMove,
     addPlayerMoveInBoard,
     changeTurn,
@@ -100,9 +101,12 @@ io.on('connection', (socket)=> {
         const playerOneMoves = room.players.X.moves
         const playerTwoMoves = room.players.O.moves
         const isGameOver = room.gameOver
+        const  isPositionAvailable = checkBoardPosition(roomBoard, moveIndex)
         if (isGameOver) return
         if (playerOneMoves.length + playerTwoMoves.length === roomBoard.length) return
-            
+        
+
+        if (!isPositionAvailable) return
         addPlayerMoveInBoard(roomBoard, playerTurn, moveIndex)
         addPlayerMove(player.moves, moveIndex)
         changeTurn(room, playerTurn)
