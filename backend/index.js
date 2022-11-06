@@ -14,14 +14,12 @@ const {
 const PORT = process.env.PORT || 3000
 
 const app = express()
-app.use(cors({
-    origin: "https://lka-tic-tac-toe.netlify.app/"
-}))
+app.use(cors())
 
 const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "https://lka-tic-tac-toe.netlify.app",
     }
 })
 
