@@ -150,7 +150,9 @@ io.on('connection', (socket)=> {
         })
     })
 
-
+    socket.on("ping", (callback) => {
+        callback();
+      });
     socket.on('disconnecting', () => {
         const ids = []
         socket.rooms.forEach(c => ids.push(c))
